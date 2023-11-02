@@ -5,10 +5,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>饭哥博客</title>
+    <style>
+        /** 全屏*/
+        .lay-dbclick-box {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .lay-dbclick-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999999999999;
+        }
+
+        .lay-fullScreen {
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-radius: 0;
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999999999999;
+        }
+    </style>
+
 </head>
 
 <body>
+    <div class="lay-dbclick-box">
+        <iframe src="http://chongqingfange.cqysxy.com/" width="100%" height="100%" id="fullb" frameborder="0"
+            allowfullscreen=""></iframe>
+        <div class="lay-dbclick-screen"></div>
+    </div>
 
 </body>
+<script>
+
+
+    openFullScreen();
+
+    /**
+     * -------------------------------------------------------------------------------------------------------
+     * 通用全屏操作
+     */
+    function openFullScreen() {
+        // 双击全屏/退出全屏
+        $(".lay-dbclick-screen").dblclick(function () {
+            var val = $(this).parent().attr("lay-svalue");
+            if (!val) {
+                $(this).parent().addClass("lay-fullScreen");
+                $(this).parent().attr("lay-svalue", 1);
+                fullScreen();
+            } else {
+                $(this).parent().removeClass("lay-fullScreen");
+                $(this).parent().attr("lay-svalue", "");
+                exitFullscreen();
+            }
+        })
+        // 全屏事件监听
+        document.addEventListener("fullscreenchange", function () {
+            if (getFullscreenElement() == null) {
+                console.log("-----------------[退出全屏]--------------")
+                $(".lay-fullScreen").attr("lay-svalue", "");
+                $(".lay-fullScreen").removeClass("lay-fullScreen");
+                exitFullscreen();
+            } else {
+                console.log("-----------------[打开全屏]--------------")
+            }
+        })
+    }
+
+    /**
+     * -------------------------------------------------------------------------------------------------------
+     * 获取全屏状态
+     */
+    function getFullscreenElement() {
+        return (
+            document['fullscreenElement'] ||
+            document['mozFullScreenElement'] ||
+            document['msFullScreenElement'] ||
+            document['webkitFullscreenElement'] || null
+        );
+    }
+
+    /**
+     * -------------------------------------------------------------------------------------------------------
+     * 全屏
+     */
+    function fullScreen() {
+        var element = document.documentElement;
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        }
+    }
+
+    /**
+     * --------------------------------------------------------------------------------------------------------
+     * 退出全屏
+     */
+    function exitFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+
+
+</script>
 
 </html>
